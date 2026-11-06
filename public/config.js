@@ -11,4 +11,4 @@
  * Leave this blank when developing locally with `node server.js`; the app
  * automatically uses the local Node API on localhost.
  */
-window.ZEST_API_URL = '';
+window.ZEST_API_URL = 'https://script.google.com/macros/s/AKfycbxctwK7SDRCh9pwpTwMeMCAHzey9aBxLf6iBkWw9KtmlbrG2cHwmqQH-vAan-0s_sYnkQ/exec';
