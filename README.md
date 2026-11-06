@@ -6,12 +6,15 @@ Each username gets its own diary, goals and history. Data lives in a local JSON 
 
 ![stack](https://img.shields.io/badge/Node.js-20%2B-3c873a) ![deps](https://img.shields.io/badge/dependencies-0-f97316)
 
+**Repository:** [github.com/Stonepaw90/zest](https://github.com/Stonepaw90/zest)
+
 ---
 
 ## Quick start
 
 ```bash
-# From this folder
+git clone https://github.com/Stonepaw90/zest.git
+cd zest
 node server.js
 ```
 
