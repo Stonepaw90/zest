@@ -54,6 +54,7 @@ export function macroGrams(value) {
 /** Sums the macro grams and macro-derived calories of a list of entries. */
 export function macroTotals(entries = []) {
   const totals = { protein: 0, fat: 0, carbs: 0 };
+  const macroCounts = { protein: 0, fat: 0, carbs: 0 };
   let macroTracked = 0;
   for (const entry of entries) {
     let tracked = false;
@@ -61,6 +62,7 @@ export function macroTotals(entries = []) {
       const value = macroValue(entry?.[macro.key]);
       if (value === null) continue;
       totals[macro.key] += value;
+      macroCounts[macro.key] += 1;
       tracked = true;
     }
     if (tracked) macroTracked += 1;
@@ -69,7 +71,7 @@ export function macroTotals(entries = []) {
   const macroCalories = Math.round(
     totals.protein * 4 + totals.fat * 9 + totals.carbs * 4,
   );
-  return { ...totals, macroTracked, macroCalories };
+  return { ...totals, macroTracked, macroCounts, macroCalories };
 }
 
 /** Short "P 12g · F 3g · C 20g" line, skipping nutrients a food did not report. */

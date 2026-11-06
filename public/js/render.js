@@ -310,12 +310,13 @@ export function renderMacroCard() {
     '#macro-rows',
     MACROS.map((macro) => {
       const grams = totals[macro.key];
-      const width = hasData ? (grams / maxGrams) * 100 : 0;
+      const tracked = (totals.macroCounts?.[macro.key] || 0) > 0;
+      const width = tracked ? (grams / maxGrams) * 100 : 0;
       return `<div class="macro-row">
         <span class="macro-dot" style="background:${macro.color}"></span>
         <span class="macro-name">${macro.label}</span>
         <span class="macro-bar"><i style="width:${width.toFixed(1)}%;background:${macro.color}"></i></span>
-        <span class="macro-grams">${hasData ? `${macroGrams(grams)}<small>g</small>` : '—'}</span>
+        <span class="macro-grams">${tracked ? `${macroGrams(grams)}<small>g</small>` : '—'}</span>
       </div>`;
     }).join(''),
   );
