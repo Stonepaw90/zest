@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f97316" />
+  <title>Zest — a calorie counter with zest</title>
+  <meta name="description" content="A playful calorie counting app: tap bubbles, log meals, and keep your streak. Every day saved locally or to your own Google Sheet." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-logo" viewBox="0 0 40 40">
+      <circle cx="20" cy="20" r="18" fill="currentColor"/>
+      <circle cx="20" cy="20" r="14.5" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <path d="M20 8v24M8 20h24M11.5 11.5l17 17M28.5 11.5l-17 17" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-opacity=".85"/>
+      <circle cx="20" cy="20" r="3.2" fill="#fff" fill-opacity=".9"/>
+    </symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 15.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.7 1.7 0 0015 19.4a1.7 1.7 0 00-1 1.56V21a2 2 0 11-4 0v-.09A1.7 1.7 0 009 19.4a1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.56-1H3a2 2 0 110-4h.09A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06A1.7 1.7 0 009 4.6h.08A1.7 1.7 0 0010 3.04V3a2 2 0 114 0v.09a1.7 1.7 0 001 1.56h.08a1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06A1.7 1.7 0 0019.4 9v.08a1.7 1.7 0 001.56 1H21a2 2 0 110 4h-.09a1.7 1.7 0 00-1.51.92z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M12 20h9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v5M14 11v5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z" fill="currentColor"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 22c4.4 0 7-2.8 7-6.6 0-2.5-1.3-4.7-3.1-6.5-.4 1.5-1.3 2.6-2.5 3.2.2-3.6-1.6-6.8-4.4-8.6.2 3.3-1.4 5.1-2.9 7C4.9 12.2 5 13.6 5 15.4 5 19.2 7.6 22 12 22z" fill="currentColor"/><path d="M12 19.2c1.5 0 2.6-1.1 2.6-2.6 0-1.4-.9-2.4-1.7-3.2-.3 1-1 1.5-1.6 2-.6.5-.9 1.2-.9 1.9 0 1.1.7 1.9 1.6 1.9z" fill="#fff" fill-opacity=".65"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z" fill="currentColor"/></symbol>
+  </svg>
+
+  <!-- ============ WELCOME / USERNAME GATE ============ -->
+  <div class="gate" id="gate">
+    <div class="gate-glow glow-a"></div>
+    <div class="gate-glow glow-b"></div>
+    <div class="floaties" aria-hidden="true">
+      <span class="floaty f1"></span><span class="floaty f2"></span><span class="floaty f3"></span>
+      <span class="floaty f4"></span><span class="floaty f5"></span><span class="floaty f6"></span>
+      <span class="floaty f7"></span><span class="floaty f8"></span>
+    </div>
+
+    <div class="gate-shell">
+      <div class="brand brand-gate">
+        <span class="logo"><svg><use href="#i-logo"></use></svg></span>
+        <span class="brand-word">zest<span>.</span></span>
+      </div>
+
+      <div class="gate-grid">
+        <section class="gate-copy">
+          <span class="eyebrow eyebrow-lg"><span class="spark">✦</span> Calorie counting, with zest</span>
+          <h1>Count the bites.<br /><em>Keep the zest.</em></h1>
+          <p class="gate-lede">Tap a bubble for every 50 calories. Log the good stuff. Watch your day fill up — and your streak grow.</p>
+          <ul class="gate-points">
+            <li><span class="point-icon">🫧</span><div><strong>Bubble meter</strong><span>40 bubbles. Tap where you're at.</span></div></li>
+            <li><span class="point-icon">📊</span><div><strong>Numbers that matter</strong><span>Trends, meal mix, streaks, pace.</span></div></li>
+            <li><span class="point-icon">🗓️</span><div><strong>Every day, editable</strong><span>Yesterday called. Fix that snack.</span></div></li>
+          </ul>
+        </section>
+
+        <section class="gate-card card">
+          <div class="gate-card-head">
+            <span class="mini-pill">👋 Welcome</span>
+            <h2>Who's counting?</h2>
+            <p>Type a username. Each name keeps its own diary, goals and streak.</p>
+          </div>
+          <form id="gate-form" autocomplete="off" novalidate>
+            <label class="field-label" for="gate-username">Your username</label>
+            <div class="gate-input-row">
+              <span class="input-avatar" id="gate-avatar">?</span>
+              <input id="gate-username" name="username" type="text" maxlength="24" placeholder="e.g. Abraham"
+                autocapitalize="words" autocomplete="username" spellcheck="false" />
+            </div>
+            <p class="form-error" id="gate-error" role="alert"></p>
+            <button class="btn btn-primary btn-lg full" id="gate-submit" type="submit">
+              Start counting <svg class="btn-arrow"><use href="#i-arrow"></use></svg>
+            </button>
+          </form>
+          <div class="recent-users" id="gate-recents"></div>
+          <div class="gate-storage" id="gate-storage">
+            <span class="storage-dot"></span><span>Checking storage…</span>
+          </div>
+        </section>
+      </div>
+
+      <p class="gate-foot">No passwords, no nonsense. Your log stays yours — local file or your own Google Sheet. 🍊</p>
+    </div>
+  </div>
+
+  <!-- ============ MAIN APP ============ -->
+  <div class="app is-hidden" id="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="/" onclick="return false;" aria-label="Zest home">
+          <span class="logo"><svg><use href="#i-logo"></use></svg></span>
+          <span class="brand-word">zest<span>.</span></span>
+          <span class="brand-tag">calorie club</span>
+        </a>
+
+        <div class="date-nav" role="group" aria-label="Change day">
+          <button class="icon-btn" id="prev-day" aria-label="Previous day"><svg><use href="#i-left"></use></svg></button>
+          <button class="date-pill" id="date-pill">
+            <span class="date-main" id="date-label">Today</span>
+            <span class="date-sub" id="date-sub">Wed, Nov 5</span>
+          </button>
+          <button class="icon-btn" id="next-day" aria-label="Next day"><svg><use href="#i-right"></use></svg></button>
+          <button class="today-btn is-hidden" id="today-btn">Back to today</button>
+          <input type="date" id="date-input" class="native-date" aria-label="Pick a date" />
+        </div>
+
+        <div class="top-actions">
+          <button class="user-chip" id="user-chip" aria-haspopup="menu" aria-expanded="false">
+            <span class="avatar" id="user-avatar">A</span>
+            <span class="user-name" id="user-name">friend</span>
+            <span class="chev">▾</span>
+          </button>
+          <button class="icon-btn" id="settings-btn" aria-label="Settings"><svg><use href="#i-gear"></use></svg></button>
+          <div class="user-menu is-hidden" id="user-menu" role="menu">
+            <div class="user-menu-head">
+              <span class="avatar" id="menu-avatar">A</span>
+              <div><strong id="menu-name">friend</strong><span>Signed in locally</span></div>
+            </div>
+            <button id="menu-switch" role="menuitem">Switch user</button>
+            <button id="menu-settings" role="menuitem">Profile &amp; goals</button>
+            <button id="menu-sheet" role="menuitem" class="is-hidden">Open Google Sheet ↗</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero-grid">
+        <article class="card meter-card" id="meter-card">
+          <div class="meter-top">
+            <div>
+              <p class="eyebrow" id="day-greeting">Good morning</p>
+              <h1 class="meter-title" id="meter-title">Today's fuel</h1>
+            </div>
+            <div class="pill" id="status-pill"><span class="pill-dot"></span><span id="status-text">Fresh start</span></div>
+          </div>
+
+          <div class="meter-readout">
+            <div class="big-number" id="consumed">0</div>
+            <div class="readout-side">
+              <div class="readout-goal">of <strong id="goal-num">2,000</strong> kcal</div>
+              <div class="readout-bubbles" id="bubble-count">0 of 40 bubbles</div>
+            </div>
+          </div>
+
+          <div class="bubble-meter" id="bubble-meter" role="group" aria-label="Calorie bubble meter. Each bubble is 50 calories."></div>
+
+          <div class="meter-foot">
+            <span class="legend"><span class="legend-bubble"></span> 1 bubble = 50 cal</span>
+            <span class="over-chip is-hidden" id="over-chip">+0 over</span>
+          </div>
+
+          <div class="overflow-row is-hidden" id="overflow-row">
+            <div class="overflow-dots" id="overflow-dots"></div>
+            <span id="overflow-text"></span>
+          </div>
+
+          <div class="plate-panel" id="meal-snapshot" aria-label="Calories by meal today"></div>
+
+          <div class="meter-message" id="meter-message">Tap the bubble for the calories you've eaten so far.</div>
+        </article>
+
+        <div class="side-stack">
+          <article class="card tank-card">
+            <div class="card-head">
+              <h3>Left in the tank</h3>
+              <span class="mini" id="tank-percent">100%</span>
+            </div>
+            <div class="tank-number" id="tank-number">2,000</div>
+            <div class="tank-sub" id="tank-sub">calories to play with</div>
+            <div class="track"><div class="track-fill" id="tank-fill"></div></div>
+            <div class="energy-rows">
+              <div><span>Estimated burn</span><strong id="tdee">2,560</strong></div>
+              <div><span>Net balance</span><strong id="net">−2,000</strong></div>
+            </div>
+          </article>
+
+          <article class="card journey-card">
+            <div class="card-head">
+              <h3>Journey to <span id="journey-goal">200</span> lb</h3>
+              <span class="mini" id="days-left">60 days left</span>
+            </div>
+            <div class="weight-line">
+              <strong id="weight-now">210</strong><span class="unit">lb</span>
+              <span class="weight-arrow">→</span>
+              <span class="weight-target" id="weight-goal">200 lb</span>
+            </div>
+            <div class="track"><div class="track-fill journey" id="journey-fill"></div></div>
+            <div class="journey-foot">
+              <span id="weight-to-go">10 lb to go</span>
+              <span id="pace-note">at goal pace</span>
+            </div>
+          </article>
+
+          <article class="card macro-card" id="macro-card">
+            <div class="card-head">
+              <h3>Macro balance</h3>
+              <span class="mini" id="macro-sub">Not tracked yet</span>
+            </div>
+            <div class="macro-card-body" id="macro-rows"></div>
+            <p class="macro-foot" id="macro-foot">Pick a food from search to auto-fill protein, fat and carbs.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="card food-card">
+        <div class="food-head">
+          <div>
+            <p class="eyebrow">The diary</p>
+            <h2>What did you eat?</h2>
+          </div>
+          <div class="food-total"><strong id="food-total">0</strong><span>kcal logged</span></div>
+        </div>
+
+        <form id="add-form" class="add-form" autocomplete="off">
+          <div class="meal-seg" id="meal-seg" role="group" aria-label="Meal">
+            <button type="button" data-meal="Breakfast" class="meal-btn">🥣 <span>Breakfast</span></button>
+            <button type="button" data-meal="Lunch" class="meal-btn">🥗 <span>Lunch</span></button>
+            <button type="button" data-meal="Dinner" class="meal-btn">🍽️ <span>Dinner</span></button>
+            <button type="button" data-meal="Snacks" class="meal-btn">🍊 <span>Snacks</span></button>
+          </div>
+          <div class="add-row">
+            <div class="name-field">
+              <label class="sr-only" for="food-name">Food name</label>
+              <input id="food-name" type="text" maxlength="120" placeholder="Search foods or type your own…" spellcheck="false"
+                autocomplete="off" aria-autocomplete="list" aria-controls="food-suggest" aria-expanded="false" />
+              <div class="food-suggest is-hidden" id="food-suggest" role="listbox" aria-label="Food suggestions"></div>
+            </div>
+            <div class="cal-field">
+              <label class="sr-only" for="food-cal">Calories</label>
+              <input id="food-cal" type="number" min="0" max="20000" step="1" inputmode="numeric" placeholder="0" />
+              <span>cal</span>
+            </div>
+            <button class="btn btn-primary add-btn" id="add-btn" type="submit">
+              <svg><use href="#i-plus"></use></svg><span>Add</span>
+            </button>
+          </div>
+          <div class="macro-row" aria-label="Macros, optional">
+            <label class="macro-field"><span>Protein</span><span class="macro-input"><input id="food-protein" type="number" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="0" /><em>g</em></span></label>
+            <label class="macro-field"><span>Fat</span><span class="macro-input"><input id="food-fat" type="number" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="0" /><em>g</em></span></label>
+            <label class="macro-field"><span>Carbs</span><span class="macro-input"><input id="food-carbs" type="number" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="0" /><em>g</em></span></label>
+            <span class="macro-hint" id="macro-hint">Auto-fills from food search</span>
+          </div>
+          <p class="form-error" id="add-error" role="alert"></p>
+        </form>
+
+        <div class="quick-chips" id="quick-chips" aria-label="Quick foods"></div>
+        <div class="food-list" id="food-list"></div>
+      </section>
+
+      <section class="analytics">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">The bigger picture</p>
+            <h2>Your numbers</h2>
+          </div>
+          <p class="section-sub" id="analytics-range">Last 14 days</p>
+        </div>
+
+        <div class="stat-grid" id="stat-grid"></div>
+
+        <div class="chart-grid">
+          <article class="card chart-card">
+            <div class="card-head">
+              <div>
+                <h3>Daily calories</h3>
+                <p class="mini" id="chart-sub">Last 14 days · dashed line is your goal</p>
+              </div>
+              <div class="chart-key">
+                <span><i class="key-dot key-under"></i> under</span>
+                <span><i class="key-dot key-over"></i> over</span>
+              </div>
+            </div>
+            <div class="chart" id="bar-chart"></div>
+          </article>
+
+          <article class="card donut-card">
+            <div class="card-head">
+              <div>
+                <h3>Meal mix</h3>
+                <p class="mini">Logged food · last 7 days</p>
+              </div>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="donut"></div>
+              <div class="donut-legend" id="donut-legend"></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="card macro-chart-card">
+          <div class="card-head">
+            <div>
+              <h3>Macro rhythm</h3>
+              <p class="mini">Grams per day · last 7 days</p>
+            </div>
+            <div class="macro-legend">
+              <span><i style="background:#ea580c"></i>Protein</span>
+              <span><i style="background:#f59e0b"></i>Fat</span>
+              <span><i style="background:#0ea5e9"></i>Carbs</span>
+            </div>
+          </div>
+          <div class="chart macro-chart" id="macro-chart"></div>
+        </article>
+
+        <div class="insight-grid" id="insight-grid"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="foot-inner">
+        <div class="foot-brand">
+          <span class="logo logo-sm"><svg><use href="#i-logo"></use></svg></span>
+          <span>zest<span class="dot">.</span> — count the bites, keep the zest.</span>
+        </div>
+        <div class="storage-badge" id="storage-badge"><span class="storage-dot"></span><span id="storage-text">Storage</span></div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ============ MODALS ============ -->
+  <div class="modal" id="settings-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="settings-modal"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Make it yours</p>
+          <h2 id="settings-title">Profile &amp; goals</h2>
+        </div>
+        <button class="icon-btn" data-close="settings-modal" aria-label="Close"><svg><use href="#i-close"></use></svg></button>
+      </div>
+      <form id="settings-form" class="settings-form">
+        <div class="settings-user">
+          <span class="avatar avatar-lg" id="settings-avatar">A</span>
+          <div><strong id="settings-username">friend</strong><span>Your diary is tied to this username.</span></div>
+          <button type="button" class="link-btn" id="switch-user-btn">Switch user</button>
+        </div>
+
+        <div class="form-grid">
+          <label class="field"><span>Daily calorie goal</span><input type="number" id="set-goal" min="800" max="6000" step="50" required /><em>kcal · bubbles adapt</em></label>
+          <label class="field"><span>Run per week</span><input type="number" id="set-run" min="0" max="25" step="0.25" required /><em>hours</em></label>
+          <label class="field"><span>Age</span><input type="number" id="set-age" min="13" max="100" required /><em>years</em></label>
+          <label class="field"><span>Sex (for BMR)</span><select id="set-sex"><option value="male">Male</option><option value="female">Female</option></select><em>energy math</em></label>
+          <label class="field"><span>Height</span><span class="inline-inputs"><input type="number" id="set-ft" min="4" max="7" required /><em>ft</em><input type="number" id="set-in" min="0" max="11.5" step="0.5" required /><em>in</em></span></label>
+          <label class="field"><span>Current weight</span><input type="number" id="set-current" min="70" max="500" step="0.1" required /><em>lb</em></label>
+          <label class="field"><span>Goal weight</span><input type="number" id="set-goal-weight" min="70" max="500" step="0.1" required /><em>lb</em></label>
+          <label class="field"><span>Starting weight</span><input type="number" id="set-start" min="70" max="500" step="0.1" required /><em>lb</em></label>
+          <label class="field"><span>Target date</span><input type="date" id="set-target" required /><em>the finish line</em></label>
+        </div>
+        <p class="form-error" id="settings-error" role="alert"></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" data-close="settings-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="settings-save">Save profile</button>
+        </div>
+      </form>
+      <div class="modal-foot">
+        <div class="storage-badge" id="settings-storage"><span class="storage-dot"></span><span>Storage</span></div>
+        <a id="settings-sheet-link" class="link-btn is-hidden" target="_blank" rel="noopener">Open Google Sheet ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="edit-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="edit-modal"></div>
+    <div class="modal-card modal-sm" role="dialog" aria-modal="true" aria-labelledby="edit-title">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">Fix it</p>
+          <h2 id="edit-title">Edit entry</h2>
+        </div>
+        <button class="icon-btn" data-close="edit-modal" aria-label="Close"><svg><use href="#i-close"></use></svg></button>
+      </div>
+      <form id="edit-form" class="edit-form">
+        <label class="field"><span>Food</span><input type="text" id="edit-name" maxlength="120" required /></label>
+        <div class="form-grid">
+          <label class="field"><span>Calories</span><input type="number" id="edit-cal" min="0" max="20000" required /><em>kcal</em></label>
+          <label class="field"><span>Meal</span>
+            <select id="edit-meal">
+              <option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snacks</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-grid macro-grid">
+          <label class="field"><span>Protein</span><input type="number" id="edit-protein" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="—" /><em>grams · optional</em></label>
+          <label class="field"><span>Fat</span><input type="number" id="edit-fat" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="—" /><em>grams · optional</em></label>
+          <label class="field"><span>Carbs</span><input type="number" id="edit-carbs" min="0" max="1000" step="0.1" inputmode="decimal" placeholder="—" /><em>grams · optional</em></label>
+        </div>
+        <p class="form-error" id="edit-error" role="alert"></p>
+        <div class="modal-actions spread">
+          <button type="button" class="btn btn-danger-ghost" id="edit-delete"><svg><use href="#i-trash"></use></svg> Delete</button>
+          <div class="modal-actions-right">
+            <button type="button" class="btn btn-ghost" data-close="edit-modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="edit-save">Save changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
+  <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+
+  <script src="/js/app.js" type="module"></script>
+</body>
+</html>

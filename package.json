@@ -1,0 +1,14 @@
+{
+  "name": "zest-calorie-counter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A playful, bubble-powered calorie counter with per-user diaries, charts, and optional Google Sheets storage.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

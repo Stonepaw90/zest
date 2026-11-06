@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+credentials.json
+data/db.json
+data/*.corrupt-*
+*.log
+.DS_Store
+Thumbs.db
