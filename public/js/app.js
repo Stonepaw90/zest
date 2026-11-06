@@ -1,5 +1,6 @@
 /* Boot, user session, event wiring, API actions. */
-import { api } from './api.js';
+import { api, isConfigured } from './api.js';
+import { hasFoodData, searchFoods } from './foods.js';
 import { state, applyDay, recomputeDay, resetForUser, minDate } from './state.js';
 import {
   renderAll,
@@ -56,12 +57,25 @@ async function boot() {
 }
 
 async function loadHealth() {
+  if (!isConfigured()) {
+    state.health = { storage: 'none', warning: null, sheetUrl: null };
+    showSetupWarning(true);
+    renderStorage();
+    return;
+  }
   try {
     state.health = await api('/api/health');
   } catch {
     state.health = null;
   }
+  showSetupWarning(false);
   renderStorage();
+}
+
+function showSetupWarning(show) {
+  const node = $('#setup-warning');
+  if (!node) return;
+  node.classList.toggle('is-hidden', !show);
 }
 
 async function loadRecentUsers() {
@@ -389,13 +403,17 @@ function wireFoodSuggest() {
     const seq = ++suggestSeq;
     suggestTimer = setTimeout(async () => {
       try {
-        const data = await api(`/api/foods?q=${enc(query)}`);
+        if (!hasFoodData()) paintSuggestNote('Loading the food database…');
+        const foods = await searchFoods(query, 8);
         if (seq !== suggestSeq) return;
-        suggestFoods = Array.isArray(data.foods) ? data.foods : [];
+        suggestFoods = Array.isArray(foods) ? foods : [];
         suggestIndex = suggestFoods.length ? 0 : -1;
         paintSuggestions(query);
-      } catch {
-        if (seq === suggestSeq) hideSuggest();
+      } catch (error) {
+        if (seq !== suggestSeq) return;
+        suggestFoods = [];
+        suggestIndex = -1;
+        paintSuggestNote(error.message || 'Food search is unavailable right now.');
       }
     }, 160);
   });
@@ -434,6 +452,15 @@ function wireFoodSuggest() {
   document.addEventListener('click', (event) => {
     if (!event.target.closest('.name-field')) hideSuggest();
   });
+}
+
+function paintSuggestNote(text) {
+  const host = $('#food-suggest');
+  const input = $('#food-name');
+  if (!host || !input) return;
+  host.innerHTML = `<div class="suggest-empty">${escapeHtml(text)}</div>`;
+  host.classList.remove('is-hidden');
+  input.setAttribute('aria-expanded', 'true');
 }
 
 function paintSuggestions(query) {

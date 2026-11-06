@@ -621,23 +621,44 @@ function renderInsights({ last7, logged7, average, onTarget7, streak, goal, favo
 
 export function renderStorage() {
   const health = state.health;
-  const sheets = health?.storage === 'sheets';
-  const label = sheets ? 'Google Sheets · synced' : 'Local mode · data/db.json';
-  const gateLabel = sheets ? 'Google Sheets connected' : 'Local mode — Google Sheets not set up';
+  const mode = health?.storage;
+  const sheets = mode === 'sheets';
+  const local = mode === 'local';
+  const label = sheets
+    ? 'Google Sheets · synced'
+    : local
+      ? 'Local mode · data/db.json'
+      : mode === 'none'
+        ? 'Backend not configured'
+        : 'Checking storage…';
+  const gateLabel = sheets
+    ? 'Google Sheets connected'
+    : local
+      ? 'Local mode — Google Sheets not set up'
+      : mode === 'none'
+        ? 'Backend not configured — see config.js'
+        : 'Checking storage…';
+  const dotClass = sheets ? 'online' : local ? 'local' : '';
 
   const gateDot = $('#gate-storage .storage-dot');
-  if (gateDot) gateDot.className = `storage-dot ${sheets ? 'online' : 'local'}`;
+  if (gateDot) gateDot.className = `storage-dot ${dotClass}`;
   const gateText = $('#gate-storage span:last-child');
   if (gateText) gateText.textContent = gateLabel;
 
   const footDot = $('#storage-badge .storage-dot');
-  if (footDot) footDot.className = `storage-dot ${sheets ? 'online' : 'local'}`;
+  if (footDot) footDot.className = `storage-dot ${dotClass}`;
   setText('#storage-text', label);
   const badge = $('#storage-badge');
-  if (badge) badge.title = health?.warning || (sheets ? `Synced to ${health.sheetUrl}` : 'Add Google Sheets credentials in .env to sync there.');
+  if (badge) {
+    badge.title = health?.warning || (sheets
+      ? `Synced to ${health.sheetUrl}`
+      : local
+        ? 'Add Google Sheets credentials in .env to sync there.'
+        : 'Set window.ZEST_API_URL in config.js to connect the backend.');
+  }
 
   const settingsDot = $('#settings-storage .storage-dot');
-  if (settingsDot) settingsDot.className = `storage-dot ${sheets ? 'online' : 'local'}`;
+  if (settingsDot) settingsDot.className = `storage-dot ${dotClass}`;
   const settingsText = $('#settings-storage span:last-child');
   if (settingsText) settingsText.textContent = label;
 

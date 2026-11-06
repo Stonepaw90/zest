@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#f97316" />
   <title>Zest — a calorie counter with zest</title>
-  <meta name="description" content="A playful calorie counting app: tap bubbles, log meals, and keep your streak. Every day saved locally or to your own Google Sheet." />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/styles.css" />
+  <meta name="description" content="A playful calorie counting app: tap bubbles, log meals, and keep your streak. Your diary syncs to Google Sheets." />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <svg class="svg-sprite" aria-hidden="true">
@@ -78,6 +78,10 @@
             </button>
           </form>
           <div class="recent-users" id="gate-recents"></div>
+          <p class="setup-warning is-hidden" id="setup-warning" role="alert">
+            <strong>Backend not connected.</strong> Add your Apps Script Web App URL to
+            <code>config.js</code>, then reload this page.
+          </p>
           <div class="gate-storage" id="gate-storage">
             <span class="storage-dot"></span><span>Checking storage…</span>
           </div>
@@ -92,7 +96,7 @@
   <div class="app is-hidden" id="app">
     <header class="topbar">
       <div class="topbar-inner">
-        <a class="brand" href="/" onclick="return false;" aria-label="Zest home">
+        <a class="brand" href="./" onclick="return false;" aria-label="Zest home">
           <span class="logo"><svg><use href="#i-logo"></use></svg></span>
           <span class="brand-word">zest<span>.</span></span>
           <span class="brand-tag">calorie club</span>
@@ -405,6 +409,7 @@
   <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
   <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
 
-  <script src="/js/app.js" type="module"></script>
+  <script src="config.js"></script>
+  <script src="js/app.js" type="module"></script>
 </body>
 </html>
