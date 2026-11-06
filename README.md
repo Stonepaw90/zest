@@ -42,7 +42,7 @@ Open **http://127.0.0.1:4173**, type a username, and start counting.
 - No `npm install` and no build step.
 - Requires Node.js 20 or newer (uses the built-in `fetch` and `crypto`).
 - `npm start` also works. `npm run dev` restarts on file changes.
-- Leave `public/config.js` blank. On localhost the frontend automatically uses the Node API and `data/db.json`.
+- Leave `public/config.js` blank. On localhost the frontend automatically uses the Node API (`data/db.json`, or Google Sheets if you configured the optional service account).
 
 On first login a profile is seeded from the original brief: 210 lb, 5′11″, 2,000 kcal/day, two hours of running per week, aiming for 200 lb in 60 days. Everything is editable in **Profile & goals**.
 
